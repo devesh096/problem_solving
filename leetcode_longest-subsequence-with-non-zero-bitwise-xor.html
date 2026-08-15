@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Subsequence With Non-Zero Bitwise XOR - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge.medium { background: #ed8936; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-of-type { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        .hindi p { margin-bottom: 14px; }
+        .hindi strong { color: #2b6cb0; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 14px 18px;
+            margin: 14px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .example p { margin: 4px 0; }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+            background: #f7fafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3702. Longest Subsequence With Non-Zero Bitwise XOR</h1>
+            <span class="badge medium">Medium</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <p>You are given an integer array <code>nums</code>.</p>
+            <p style="margin-top:12px;">Return the length of the <strong>longest subsequence</strong> in <code>nums</code> whose bitwise <strong>XOR</strong> is <strong>non-zero</strong>. If no such subsequence exists, return 0.</p>
+            
+            <div class="example">
+                <p><strong>Example 1:</strong></p>
+                <p>Input: nums = [1,2,3]</p>
+                <p>Output: 2</p>
+                <p>Explanation: One longest subsequence is [2, 3]. 2 XOR 3 = 1 (non-zero).</p>
+            </div>
+            
+            <div class="example">
+                <p><strong>Example 2:</strong></p>
+                <p>Input: nums = [2,3,4]</p>
+                <p>Output: 3</p>
+                <p>Explanation: The whole array [2,3,4] has XOR = 5 (non-zero).</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong><br>
+                Humein ek array diya gaya hai. Humein uski sabse lambi subsequence dhundni hai jiska bitwise XOR zero na ho. Agar aisi koi subsequence nahi milti to 0 return karna hai.</p>
+
+                <p><strong>Intuitive Approach:</strong><br>
+                Pehle poore array ka XOR nikaal lo.</p>
+
+                <p>1. Agar poore array ka XOR <strong>zero nahi</strong> hai → seedha poora array answer hai. Length = n.</p>
+
+                <p>2. Agar saare elements <strong>0</strong> hain → koi bhi subsequence ka XOR 0 hi rahega. Isliye answer = 0.</p>
+
+                <p>3. Agar poore array ka XOR <strong>0</strong> hai, lekin array mein kam se kam ek non-zero number hai →  
+                Hum kisi bhi ek non-zero number ko hata den.  
+                Naye XOR ki value wahi hataaya hua number ban jaayegi (kyunki pehle total 0 tha).  
+                Woh number non-zero hai, isliye answer = n - 1.</p>
+
+                <p>Yeh approach bilkul simple aur correct hai. Humein sirf ek baar array traverse karni padti hai.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>from typing import List
+
+class Solution:
+    def longestSubsequence(self, nums: List[int]) -> int:
+        # Time: O(n) | Space: O(1)
+        n = len(nums)
+        total_xor = 0
+        zero_count = 0
+
+        for num in nums:
+            total_xor ^= num
+            if num == 0:
+                zero_count += 1
+
+        # Case 1: whole array XOR is already non-zero
+        if total_xor != 0:
+            return n
+
+        # Case 2: all zeros
+        if zero_count == n:
+            return 0
+
+        # Case 3: XOR is 0 but at least one non-zero exists
+        return n - 1</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time Complexity: <span>O(n)</span></div>
+                <div class="comp-box">Space Complexity: <span>O(1)</span></div>
+            </div>
+            <p style="margin-top:16px; color:#4a5568;">Sirf ek hi pass mein array traverse ho raha hai. Extra space almost nahi lag raha.</p>
+        </section>
+
+        <section>
+            <h2>Examples Dry Run</h2>
+            
+            <div class="example">
+                <p><strong>Example 1: nums = [1, 2, 3]</strong></p>
+                <p>1 ^ 2 ^ 3 = 0</p>
+                <p>zero_count = 0 (koi zero nahi)</p>
+                <p>Total XOR = 0 aur non-zero elements hain → answer = 3 - 1 = <strong>2</strong></p>
+            </div>
+
+            <div class="example">
+                <p><strong>Example 2: nums = [2, 3, 4]</strong></p>
+                <p>2 ^ 3 ^ 4 = 5 ≠ 0</p>
+                <p>→ answer = <strong>3</strong> (poora array)</p>
+            </div>
+
+            <div class="example">
+                <p><strong>Edge Case: nums = [0, 0, 0]</strong></p>
+                <p>Sab zero → answer = <strong>0</strong></p>
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill • Daily Question (15 Aug 2026)
+        </footer>
+    </div>
+</body>
+</html>
