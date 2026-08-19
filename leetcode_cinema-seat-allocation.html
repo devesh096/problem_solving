@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Seat Allocation - LeetCode Solution</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .content {
+            padding: 32px;
+        }
+        section {
+            margin-bottom: 36px;
+        }
+        h2 {
+            color: #4a5568;
+            font-size: 1.35rem;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .problem-statement {
+            background: #f8fafc;
+            padding: 18px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 0.95rem;
+        }
+        .problem-statement p {
+            margin-bottom: 12px;
+        }
+        .problem-statement ul {
+            margin: 10px 0 10px 20px;
+        }
+        .hindi {
+            background: #f0fff4;
+            padding: 18px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #48bb78;
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p {
+            margin-bottom: 12px;
+        }
+        .hindi strong {
+            color: #2f855a;
+        }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        }
+        .complexity {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .comp-card {
+            flex: 1;
+            min-width: 200px;
+            background: #ebf8ff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3182ce;
+        }
+        .comp-card h3 {
+            color: #2b6cb0;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+        .comp-card p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c5282;
+        }
+        .example {
+            background: #fffaf0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ed8936;
+            font-size: 0.95rem;
+        }
+        .example strong {
+            color: #c05621;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>1386. Cinema Seat Allocation</h1>
+            <span class="badge">Medium</span>
+        </header>
+        
+        <div class="content">
+            <!-- Section 1: Problem Statement -->
+            <section>
+                <h2>1. Problem Statement</h2>
+                <div class="problem-statement">
+                    <p>A cinema has <code>n</code> rows of seats, numbered from 1 to <code>n</code>. Each row has 10 seats, numbered from 1 to 10.</p>
+                    <p>You are given a 2D integer array <code>reservedSeats</code>, where <code>reservedSeats[i] = [row_i, seat_i]</code> means that seat <code>seat_i</code> in row <code>row_i</code> is already reserved.</p>
+                    <p>A four-person group must be assigned to four seats in the <strong>same</strong> row. The group can be seated in one of the following seat blocks:</p>
+                    <ul>
+                        <li>seats 2, 3, 4, 5</li>
+                        <li>seats 4, 5, 6, 7</li>
+                        <li>seats 6, 7, 8, 9</li>
+                    </ul>
+                    <p>A block can be used only if <strong>none</strong> of its seats are reserved. Each seat can be assigned to <strong>at most one</strong> group.</p>
+                    <p>Return an integer denoting the <strong>maximum</strong> number of four-person groups that can be assigned.</p>
+                </div>
+            </section>
+
+            <!-- Section 2: Hindi Explanation -->
+            <section>
+                <h2>2. Solution Approach (Hindi में आसान समझ)</h2>
+                <div class="hindi">
+                    <p><strong>Problem kya hai?</strong><br>
+                    Cinema mein <code>n</code> rows hain, har row mein 10 seats. Kuch seats already reserved hain. Humein maximum 4-logo ke groups kitne baitha sakte hain, yeh nikalna hai. Har group sirf 2-5, 4-7 ya 6-9 wali seats pe baith sakta hai.</p>
+
+                    <p><strong>Approach kya hai?</strong><br>
+                    1. Pehle socho: agar kisi row mein koi bhi reserved seat nahi hai, to usmein 2 groups baitha sakte hain (left + right).<br>
+                    2. Sirf unhi rows ko check karo jahan reserved seats hain (kyunki n bahut bada ho sakta hai 10^9 tak).<br>
+                    3. Har aisi row ke liye check karo:<br>
+                       - Left block (2-5) free hai?<br>
+                       - Right block (6-9) free hai?<br>
+                       - Middle block (4-7) free hai?<br>
+                    4. Agar left aur right dono free → 2 groups<br>
+                       Agar koi ek bhi free → 1 group<br>
+                       Warna → 0</p>
+
+                    <p><strong>Code kaise kaam karta hai?</strong><br>
+                    Hum ek dictionary banate hain jisme har row ke reserved seats ka set store hota hai. Phir har reserved row ke liye upar wale checks karte hain. Aakhir mein empty rows ka contribution add kar dete hain (har empty row = +2).</p>
+
+                    <p><strong>Time aur Space Complexity:</strong><br>
+                    Time: O(m) — sirf reserved seats kitni hain utna time<br>
+                    Space: O(m) — dictionary mein reserved rows store karne ke liye</p>
+                </div>
+            </section>
+
+            <!-- Section 3: Code -->
+            <section>
+                <h2>3. Python Code</h2>
+                <pre><code>from typing import List
+from collections import defaultdict
+
+class Solution:
+    def maxNumberOfFamilies(self, n: int, reservedSeats: List[List[int]]) -> int:
+        # Time: O(m) where m = len(reservedSeats)
+        # Space: O(m)
+        
+        # Map: row -> set of reserved seats in that row
+        reserved = defaultdict(set)
+        for row, seat in reservedSeats:
+            reserved[row].add(seat)
+        
+        ans = 0
+        
+        # Process only rows that have reservations
+        for seats in reserved.values():
+            left = (2 not in seats and 3 not in seats and 
+                    4 not in seats and 5 not in seats)
+            middle = (4 not in seats and 5 not in seats and 
+                      6 not in seats and 7 not in seats)
+            right = (6 not in seats and 7 not in seats and 
+                     8 not in seats and 9 not in seats)
+            
+            if left and right:
+                ans += 2
+            elif left or middle or right:
+                ans += 1
+            # else 0
+        
+        # Empty rows (no reservations) can always take 2 groups
+        empty_rows = n - len(reserved)
+        ans += empty_rows * 2
+        
+        return ans</code></pre>
+            </section>
+
+            <!-- Section 4: Complexity -->
+            <section>
+                <h2>4. Time & Space Complexity</h2>
+                <div class="complexity">
+                    <div class="comp-card">
+                        <h3>Time Complexity</h3>
+                        <p>O(m)</p>
+                        <small>m = number of reserved seats</small>
+                    </div>
+                    <div class="comp-card">
+                        <h3>Space Complexity</h3>
+                        <p>O(m)</p>
+                        <small>For storing reserved seats per row</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Examples -->
+            <section>
+                <h2>5. Examples</h2>
+                <div class="example">
+                    <strong>Example 1:</strong><br>
+                    Input: n = 3, reservedSeats = [[1,2],[1,3],[1,8],[2,6],[3,1],[3,10]]<br>
+                    Output: <strong>4</strong>
+                </div>
+                <div class="example">
+                    <strong>Example 2:</strong><br>
+                    Input: n = 2, reservedSeats = [[2,1],[1,8],[2,6]]<br>
+                    Output: <strong>2</strong>
+                </div>
+                <div class="example">
+                    <strong>Example 3:</strong><br>
+                    Input: n = 4, reservedSeats = [[4,3],[1,4],[4,6],[1,7]]<br>
+                    Output: <strong>4</strong>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            LeetCode 1386 • Cinema Seat Allocation • Python Solution
+        </footer>
+    </div>
+</body>
+</html>
