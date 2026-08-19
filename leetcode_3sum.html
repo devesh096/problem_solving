@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15. 3Sum - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>15. 3Sum</h1>
+            <span class="badge medium">Medium</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>Given an integer array <code>nums</code>, return all the triplets <code>[nums[i], nums[j], nums[k]]</code> such that <code>i != j</code>, <code>i != k</code>, and <code>j != k</code>, and <code>nums[i] + nums[j] + nums[k] == 0</code>.</p>
+                <p style="margin-top: 12px;">Notice that the solution set must not contain duplicate triplets.</p>
+                <p style="margin-top: 12px;"><strong>Constraints:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>3 &lt;= nums.length &lt;= 3000</li>
+                    <li>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong><br>
+                Humein ek array diya gaya hai. Humein usme se aise teen numbers (triplets) dhoondhne hain jinka sum 0 ho. Aur ye triplets unique hone chahiye — matlab same numbers wale triplets dobara nahi aane chahiye.</p>
+
+                <p><strong>Approach kya hai?</strong><br>
+                Sabse pehle array ko sort kar lete hain. Sort karne se numbers order mein aa jaate hain, isse duplicates avoid karna aur two-pointer technique use karna aasaan ho jaata hai.</p>
+
+                <p>Phir har number ko fix karte hain (outer loop). Us fixed number ke baad wale numbers pe do pointers (left aur right) chalate hain.</p>
+
+                <ul style="margin-left: 20px; margin-bottom: 12px;">
+                    <li>Agar teenon ka sum 0 hai → triplet mil gaya, usko result mein daal do. Phir left aur right ke duplicates skip kar do.</li>
+                    <li>Agar sum 0 se chhota hai → left pointer aage badhao (kyunki array sorted hai, isse sum badhega).</li>
+                    <li>Agar sum 0 se bada hai → right pointer peeche lao (isse sum ghataga).</li>
+                </ul>
+
+                <p>Is tarah har possible unique triplet mil jaata hai bina extra space ke.</p>
+
+                <p><strong>Code kaise kaam karta hai?</strong><br>
+                1. Array sort karo.<br>
+                2. Har index <code>i</code> ke liye (jo pehla number fix karta hai) left = i+1 aur right = last index set karo.<br>
+                3. Jab tak left &lt; right hai, sum check karo aur pointers move karo.<br>
+                4. Duplicates ko skip karke unique triplets ensure karo.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>class Solution:
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        # Time: O(n^2), Space: O(1) excluding output
+        nums.sort()
+        n = len(nums)
+        result = []
+
+        for i in range(n - 2):
+            # Skip duplicate values for the fixed number
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            left = i + 1
+            right = n - 1
+
+            while left < right:
+                total = nums[i] + nums[left] + nums[right]
+
+                if total == 0:
+                    result.append([nums[i], nums[left], nums[right]])
+                    # Skip duplicates for left and right
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+                    left += 1
+                    right -= 1
+                elif total < 0:
+                    left += 1
+                else:
+                    right -= 1
+
+        return result</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n²)</span></div>
+                <div class="comp-box">Space: <span>O(1)</span> (excluding output)</div>
+            </div>
+            <p style="margin-top: 12px; font-size: 0.95rem; color: #4a5568;">Sorting takes O(n log n), lekin overall dominant part O(n²) two-pointer loops hain. Extra space almost constant hai (sirf result list ke alawa).</p>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1:</strong><br>
+                Input: <code>nums = [-1,0,1,2,-1,-4]</code><br>
+                Output: <code>[[-1,-1,2],[-1,0,1]]</code><br>
+                Explanation: Distinct triplets jinka sum 0 hai.
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong><br>
+                Input: <code>nums = [0,1,1]</code><br>
+                Output: <code>[]</code><br>
+                Explanation: Koi bhi triplet 0 sum nahi deta.
+            </div>
+            <div class="example">
+                <strong>Example 3:</strong><br>
+                Input: <code>nums = [0,0,0]</code><br>
+                Output: <code>[[0,0,0]]</code><br>
+                Explanation: Sirf ek unique triplet possible hai.
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
