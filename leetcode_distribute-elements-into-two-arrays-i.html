@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3069. Distribute Elements Into Two Arrays I - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3069. Distribute Elements Into Two Arrays I</h1>
+            <span class="badge easy">Easy</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>You are given a <strong>1-indexed</strong> array of <strong>distinct</strong> integers <code>nums</code> of length <code>n</code>.</p>
+                <p>You need to distribute all the elements of <code>nums</code> between two arrays <code>arr1</code> and <code>arr2</code> using <code>n</code> operations. In the first operation, append <code>nums[1]</code> to <code>arr1</code>. In the second operation, append <code>nums[2]</code> to <code>arr2</code>. Afterwards, in the <code>i</code>-th operation:</p>
+                <ul>
+                    <li>If the last element of <code>arr1</code> is <strong>greater</strong> than the last element of <code>arr2</code>, append <code>nums[i]</code> to <code>arr1</code>. Otherwise, append <code>nums[i]</code> to <code>arr2</code>.</li>
+                </ul>
+                <p>The array <code>result</code> is formed by concatenating the arrays <code>arr1</code> and <code>arr2</code>. For example, if <code>arr1 == [1,2,3]</code> and <code>arr2 == [4,5,6]</code>, then <code>result = [1,2,3,4,5,6]</code>.</p>
+                <p>Return the array <code>result</code>.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong><br>
+                Humein ek array <code>nums</code> diya gaya hai jisme saare numbers alag-alag (distinct) hain. Humein iske har element ko do arrays <code>arr1</code> aur <code>arr2</code> mein baantna hai.</p>
+                
+                <p>Rules simple hain:</p>
+                <ul>
+                    <li>Pehla number (nums[0]) hamesha <code>arr1</code> mein jaata hai.</li>
+                    <li>Doosra number (nums[1]) hamesha <code>arr2</code> mein jaata hai.</li>
+                    <li>Uske baad har next number ke liye: dekh lo ki <code>arr1</code> ka last element bada hai ya <code>arr2</code> ka. Jo bada hai usi array mein naya number daal do.</li>
+                </ul>
+                
+                <p><strong>Approach kya hai?</strong><br>
+                Seedha simulation karo. Do khali lists banao, pehle do elements daal do, phir baaki elements ke liye last elements compare karke decide karo kahan daalna hai. Ant mein dono lists ko jod do.</p>
+                
+                <p><strong>Code kaise kaam karta hai?</strong></p>
+                <ol>
+                    <li><code>arr1 = [nums[0]]</code> aur <code>arr2 = [nums[1]]</code> se shuru karo.</li>
+                    <li>Index 2 se last tak loop chalao.</li>
+                    <li>Har step mein <code>arr1[-1] > arr2[-1]</code> check karo. True ho to arr1 mein, warna arr2 mein append karo.</li>
+                    <li>Loop ke baad <code>arr1 + arr2</code> return kar do.</li>
+                </ol>
+                
+                <p>Yeh approach bilkul problem ke description ke according hai, isliye correct hai.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>class Solution:
+    def resultArray(self, nums: list[int]) -> list[int]:
+        # Time: O(n), Space: O(n)
+        # Simulate the distribution process as described
+        
+        # First operation: append nums[0] to arr1
+        arr1 = [nums[0]]
+        # Second operation: append nums[1] to arr2
+        arr2 = [nums[1]]
+        
+        # For remaining elements (from index 2 onwards)
+        for i in range(2, len(nums)):
+            # If last of arr1 > last of arr2, append to arr1
+            if arr1[-1] > arr2[-1]:
+                arr1.append(nums[i])
+            else:
+                # Otherwise append to arr2
+                arr2.append(nums[i])
+        
+        # Result is concatenation of arr1 and arr2
+        return arr1 + arr2
+
+
+if __name__ == "__main__":
+    sol = Solution()
+    
+    # Example 1
+    nums1 = [2, 1, 3]
+    print("Input:", nums1)
+    print("Output:", sol.resultArray(nums1))
+    print("Expected: [2, 3, 1]")
+    print()
+    
+    # Example 2
+    nums2 = [5, 4, 3, 8]
+    print("Input:", nums2)
+    print("Output:", sol.resultArray(nums2))
+    print("Expected: [5, 3, 4, 8]")</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n)</span></div>
+                <div class="comp-box">Space: <span>O(n)</span></div>
+            </div>
+            <p style="margin-top: 12px;">n elements ko ek baar traverse karte hain, aur do arrays mein store karte hain jo total O(n) space lete hain.</p>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1:</strong><br>
+                Input: nums = [2,1,3]<br>
+                Output: [2,3,1]<br>
+                Explanation: arr1 = [2,3], arr2 = [1] → result = [2,3,1]
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong><br>
+                Input: nums = [5,4,3,8]<br>
+                Output: [5,3,4,8]<br>
+                Explanation: arr1 = [5,3], arr2 = [4,8] → result = [5,3,4,8]
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
