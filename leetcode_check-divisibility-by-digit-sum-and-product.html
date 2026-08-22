@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Divisibility by Digit Sum and Product - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Check Divisibility by Digit Sum and Product</h1>
+            <span class="badge easy">Easy</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>You are given a positive integer <code>n</code>. Determine whether <code>n</code> is divisible by the <strong>sum</strong> of the following two values:</p>
+                <ul>
+                    <li>The <strong>digit sum</strong> of <code>n</code> (the sum of its digits).</li>
+                    <li>The <strong>digit product</strong> of <code>n</code> (the product of its digits).</li>
+                </ul>
+                <p>Return <code>true</code> if <code>n</code> is divisible by this sum; otherwise, return <code>false</code>.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong><br>
+                Humein ek positive number <code>n</code> diya gaya hai. Humein yeh check karna hai ki kya yeh number apne digits ke sum aur product ke jod se completely divide hota hai ya nahi.</p>
+                
+                <p><strong>Approach kya hai?</strong></p>
+                <p>1. Number ke saare digits nikaalo (ek-ek karke last digit lete jao).</p>
+                <p>2. Un digits ka <strong>sum</strong> (jod) calculate karo.</p>
+                <p>3. Unhi digits ka <strong>product</strong> (guna) calculate karo.</p>
+                <p>4. Ab sum + product ka total nikaalo.</p>
+                <p>5. Check karo ki original number is total se divide hota hai ya nahi (agar remainder 0 aaye to true, nahi to false).</p>
+                
+                <p><strong>Code kaise kaam karta hai?</strong><br>
+                Hum loop chalate hain jab tak number 0 se bada hai. Har baar last digit nikaalte hain (<code>n % 10</code>), sum mein jodte hain aur product mein guna karte hain. Phir number ko 10 se divide karke aage badhte hain. Ant mein original number ko total se modulo karke check karte hain.</p>
+                
+                <p><strong>Note:</strong> Agar number mein 0 digit ho to product 0 ho jaata hai, lekin sum hamesha kam se kam 1 hota hai, isliye zero se divide ka issue nahi aata.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>class Solution:
+    def checkDivisibility(self, n: int) -> bool:
+        # Time Complexity: O(log n) - number of digits
+        # Space Complexity: O(1)
+        original = n
+        digit_sum = 0
+        digit_product = 1
+        
+        while n > 0:
+            digit = n % 10
+            digit_sum += digit
+            digit_product *= digit
+            n //= 10
+        
+        total = digit_sum + digit_product
+        return original % total == 0</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(log n)</span></div>
+                <div class="comp-box">Space: <span>O(1)</span></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1:</strong><br>
+                Input: n = 99<br>
+                Output: true<br>
+                Explanation: Digits = 9, 9 → Sum = 18, Product = 81 → Total = 99 → 99 % 99 == 0
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong><br>
+                Input: n = 23<br>
+                Output: false<br>
+                Explanation: Digits = 2, 3 → Sum = 5, Product = 6 → Total = 11 → 23 % 11 != 0
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
