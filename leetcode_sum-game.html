@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1927. Sum Game - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>1927. Sum Game</h1>
+            <span class="badge medium">Medium</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>Alice and Bob take turns playing a game, with <strong>Alice</strong> starting first.</p>
+                <p>You are given a string <code>num</code> of <strong>even length</strong> consisting of digits and <code>'?'</code> characters. On each turn, a player will do the following if there is still at least one <code>'?'</code> in <code>num</code>:</p>
+                <ol>
+                    <li>Choose an index <code>i</code> where <code>num[i] == '?'</code>.</li>
+                    <li>Replace <code>num[i]</code> with any digit between <code>'0'</code> and <code>'9'</code>.</li>
+                </ol>
+                <p>The game ends when there are no more <code>'?'</code> characters in <code>num</code>.</p>
+                <p>For Bob to win, the sum of the digits in the first half of <code>num</code> must be <strong>equal</strong> to the sum of the digits in the second half. For Alice to win, the sums must <strong>not be equal</strong>.</p>
+                <p>Assuming Alice and Bob play <strong>optimally</strong>, return <code>true</code> if Alice will win and <code>false</code> if Bob will win.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong></p>
+                <p>Alice aur Bob ek game khel rahe hain. Ek even length wali string <code>num</code> di hai jisme digits aur <code>'?'</code> hain. Alice pehle chalati hai. Har baar koi player ek <code>'?'</code> ko 0-9 kisi digit se replace karta hai. Jab koi <code>'?'</code> nahi bachta to game khatam.</p>
+                <p>Agar string ke <strong>pehle aadhe</strong> hisse ke digits ka sum, <strong>dusre aadhe</strong> hisse ke sum ke <strong>barabar</strong> hai → Bob jeetta hai.<br>
+                Agar <strong>barabar nahi</strong> hai → Alice jeetti hai.</p>
+                <p>Dono optimal khelte hain. Alice jeetegi to <code>true</code>, Bob jeetega to <code>false</code> return karo.</p>
+
+                <p><strong>Approach kya hai?</strong></p>
+                <p>Yeh problem math + game theory se solve hoti hai. Bahut simple trick hai:</p>
+                <p>Har <code>'?'</code> character ko socho jaise uska <strong>expected (average) value 4.5</strong> hai.<br>
+                Kyunki 0 se 9 tak numbers ka average = (0+1+2+...+9)/10 = 45/10 = <strong>4.5</strong>.</p>
+                <p>Ab:</p>
+                <ul>
+                    <li>Left half ka expected sum nikaalo (har digit ya '?' ka expected value jodke)</li>
+                    <li>Right half ka expected sum nikaalo</li>
+                </ul>
+                <p>Agar <strong>left expected sum ≠ right expected sum</strong>, to Alice jeet sakti hai (kyunki pehle se imbalance hai, Bob optimally khelke bhi difference zero nahi bana payega).</p>
+                <p>Agar equal hai, to Bob force karke equal sums bana dega.</p>
+                <p>Yeh isliye kaam karta hai kyunki optimal play mein Bob hamesha difference ko kam karne ki koshish karta hai, lekin expected value se pata chal jaata hai ki balance possible hai ya nahi.</p>
+
+                <p><strong>Code kaise kaam karta hai?</strong></p>
+                <p>1. <code>ans = 0.0</code> rakho (expected difference ke liye)<br>
+                2. Left half ke har character ka expected value <code>ans</code> mein add karo<br>
+                3. Right half ke har character ka expected value <code>ans</code> se subtract karo<br>
+                4. Agar final <code>ans != 0</code> to Alice jeetti hai → <code>true</code>, warna <code>false</code></p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>class Solution:
+    def sumGame(self, num: str) -> bool:
+        # Time Complexity: O(n)
+        # Space Complexity: O(1)
+        n = len(num)
+        ans = 0.0
+
+        def get_expectation(c: str) -> float:
+            # '?' ka expected value 4.5 hai (0 se 9 tak average)
+            return 4.5 if c == '?' else int(c)
+
+        # Left half ka expected sum add karo
+        for i in range(n // 2):
+            ans += get_expectation(num[i])
+
+        # Right half ka expected sum subtract karo
+        for i in range(n // 2, n):
+            ans -= get_expectation(num[i])
+
+        # Agar expected difference zero nahi hai to Alice jeetegi
+        return ans != 0.0</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n)</span></div>
+                <div class="comp-box">Space: <span>O(1)</span></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1:</strong><br>
+                Input: num = "5023"<br>
+                Output: false<br>
+                Explanation: Koi '?' nahi hai. Left sum = 5+0 = 5, Right sum = 2+3 = 5. Equal → Bob wins.
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong><br>
+                Input: num = "25??"<br>
+                Output: true<br>
+                Explanation: Left expected = 2+5 = 7, Right expected = 4.5+4.5 = 9. Difference ≠ 0 → Alice wins.
+            </div>
+            <div class="example">
+                <strong>Example 3:</strong><br>
+                Input: num = "?3295???"<br>
+                Output: false<br>
+                Explanation: Left expected = 4.5+3+2+9 = 18.5, Right expected = 5+4.5+4.5+4.5 = 18.5. Equal → Bob wins.
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
