@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1872. Stone Game VIII - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>1872. Stone Game VIII</h1>
+            <span class="badge hard">Hard</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>Alice and Bob take turns playing a game, with <strong>Alice starting first</strong>.</p>
+                <p>There are <code>n</code> stones arranged in a row. On each player's turn, while the number of stones is <strong>more than one</strong>, they will do the following:</p>
+                <ol>
+                    <li>Choose an integer <code>x > 1</code>, and <strong>remove</strong> the leftmost <code>x</code> stones from the row.</li>
+                    <li>Add the <strong>sum</strong> of the removed stones' values to the player's score.</li>
+                    <li>Place a <strong>new stone</strong>, whose value is equal to that sum, on the left side of the row.</li>
+                </ol>
+                <p>The game stops when <strong>only one</strong> stone is left in the row.</p>
+                <p>The <strong>score difference</strong> between Alice and Bob is <code>(Alice's score - Bob's score)</code>.</p>
+                <p>Alice's goal is to <strong>maximize</strong> the score difference, and Bob's goal is to <strong>minimize</strong> the score difference.</p>
+                <p>Given an integer array <code>stones</code> of length <code>n</code> where <code>stones[i]</code> represents the value of the <code>i</code>-th stone from the left, return the score difference between Alice and Bob if they both play optimally.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong></p>
+                <p>Alice aur Bob stones ka game khel rahe hain. Alice pehle start karti hai. Har turn mein player leftmost <code>x > 1</code> stones hataata hai, unka sum apne score mein jodta hai, aur unke sum ke barabar ek naya stone left side pe rakh deta hai. Game tab khatam hota hai jab sirf 1 stone bachta hai.</p>
+                <p>Final answer hai <strong>(Alice ka score - Bob ka score)</strong>. Alice is difference ko maximize karna chahti hai, Bob minimize.</p>
+
+                <p><strong>Important Observation:</strong></p>
+                <p>Har baar leftmost x stones ko unke sum se replace karna, prefix sum ko change nahi karta. Matlab array ka prefix sum hamesha same rehta hai. Isliye hum sirf prefix sums ke saath kaam kar sakte hain.</p>
+
+                <p><strong>Approach:</strong></p>
+                <p>1. Pehle <code>prefix sum</code> array banao: <code>s[i] = stones[0] + stones[1] + ... + stones[i]</code></p>
+                <p>2. Ab socho current player ke paas option hai ki woh current position se aage ke kisi prefix ko le le.</p>
+                <p>3. DP define karo: <code>f</code> = current player ka maximum achievable score difference jab game kisi particular index se start ho.</p>
+                <p>4. Base case: jab sirf last 2 stones bache hain, player unka sum le lega → <code>f = s[n-1]</code></p>
+                <p>5. Peeche se iterate karte hue:</p>
+                <ul>
+                    <li>Player ya to aage ka best le sakta hai (f same rahe)</li>
+                    <li>Ya current prefix <code>s[i]</code> leke opponent ke best se subtract kare → <code>s[i] - f</code></li>
+                </ul>
+                <p>Isliye: <code>f = max(f, s[i] - f)</code></p>
+                <p>6. Alice ko kam se kam 2 stones lene padte hain, isliye loop <code>i = n-2</code> se <code>i = 1</code> tak chalata hai. Final <code>f</code> hi answer hai.</p>
+
+                <p><strong>Kyun O(n) mein ho jaata hai?</strong></p>
+                <p>Har state sirf next state pe depend karta hai, isliye ek variable se hi kaam chal jaata hai. Nested loops ki zarurat nahi.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>from itertools import accumulate
+from typing import List
+
+class Solution:
+    def stoneGameVIII(self, stones: List[int]) -> int:
+        # Time Complexity: O(n)
+        # Space Complexity: O(1) after prefix
+        s = list(accumulate(stones))
+        f = s[-1]
+        for i in range(len(s) - 2, 0, -1):
+            f = max(f, s[i] - f)
+        return f</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n)</span></div>
+                <div class="comp-box">Space: <span>O(1)</span></div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1:</strong><br>
+                Input: stones = [-1,2,-3,4,-5]<br>
+                Output: 5<br>
+                Explanation: Alice pehle 4 stones leti hai (sum=2), Bob baaki 2 leti hai (sum=-3). Difference = 2 - (-3) = 5.
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong><br>
+                Input: stones = [7,-6,5,10,5,-2,-6]<br>
+                Output: 13<br>
+                Explanation: Alice saare stones ek saath le leti hai (sum=13). Bob ka score 0. Difference = 13.
+            </div>
+            <div class="example">
+                <strong>Example 3:</strong><br>
+                Input: stones = [-10,-12]<br>
+                Output: -22<br>
+                Explanation: Alice ko dono stones lene padte hain (sum=-22). Difference = -22.
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
