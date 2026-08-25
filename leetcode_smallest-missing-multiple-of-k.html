@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3718. Smallest Missing Multiple of K - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        .badge.medium { background: #ed8936; }
+        .badge.hard { background: #e53e3e; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3718. Smallest Missing Multiple of K</h1>
+            <span class="badge easy">Easy</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return the <strong>smallest positive multiple</strong> of <code>k</code> that is <strong>missing</strong> from <code>nums</code>.</p>
+                <p>A <strong>multiple</strong> of <code>k</code> is any positive integer divisible by <code>k</code>.</p>
+                <br>
+                <p><strong>Example 1:</strong></p>
+                <div class="example">
+                    <strong>Input:</strong> nums = [8,2,3,4,6], k = 2<br>
+                    <strong>Output:</strong> 10<br>
+                    <strong>Explanation:</strong> The multiples of k = 2 are 2, 4, 6, 8, 10, 12... and the smallest multiple missing from nums is 10.
+                </div>
+                <p><strong>Example 2:</strong></p>
+                <div class="example">
+                    <strong>Input:</strong> nums = [1,4,7,10,15], k = 5<br>
+                    <strong>Output:</strong> 5<br>
+                    <strong>Explanation:</strong> The multiples of k = 5 are 5, 10, 15, 20... and the smallest multiple missing from nums is 5.
+                </div>
+                <p><strong>Constraints:</strong></p>
+                <ul>
+                    <li>1 &lt;= nums.length &lt;= 100</li>
+                    <li>1 &lt;= nums[i] &lt;= 100</li>
+                    <li>1 &lt;= k &lt;= 100</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong></p>
+                <p>Humein ek array <code>nums</code> aur ek number <code>k</code> diya gaya hai. Humein <code>k</code> ka sabse chhota positive multiple nikalna hai jo <code>nums</code> mein maujood nahi hai.</p>
+                <p>Jaise k = 2 ho to multiples hain: 2, 4, 6, 8, 10, 12... Agar array mein 2,4,6,8 hain lekin 10 nahi, to answer 10 hoga.</p>
+
+                <p><strong>Approach kya hai? (Aapka approach)</strong></p>
+                <p>1. Pehle nums ke saare numbers ka ek <strong>hash table (set)</strong> banao. Isse hum jaldi check kar sakte hain ki koi number present hai ya nahi. (Yeh effectively multiples of k ka presence track karta hai.)</p>
+                <p>2. Ab k ke multiples ko chhote se bade order mein check karo: pehle k*1, phir k*2, k*3... </p>
+                <p>3. Jo pehla multiple hash table mein nahi milta (matlab value zero / missing hai), wahi answer hai. Use return kar do.</p>
+
+                <p><strong>Code kaise kaam karta hai?</strong></p>
+                <p>- <code>present = set(nums)</code> se hash table ban jati hai.</p>
+                <p>- Loop mein har baar <code>multiple = k * i</code> nikalte hain.</p>
+                <p>- Agar wo set mein nahi hai to turant return kar dete hain.</p>
+                <p>Constraints chhote hain isliye bahut fast chalega.</p>
+
+                <p><strong>Time aur Space Complexity kya hai?</strong></p>
+                <p>Time: O(n + m) jahan m missing multiple ka position hai (maximum n+1 tak hi jaayega kyunki n numbers se zyada consecutive multiples nahi ho sakte).</p>
+                <p>Space: O(n) set ke liye.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>from typing import List
+from itertools import count
+
+class Solution:
+    def missingMultiple(self, nums: List[int], k: int) -> int:
+        # Time Complexity: O(n + m) where m is the index of the missing multiple (at most n+1)
+        # Space Complexity: O(n)
+        
+        # Step 1: Create hash table (set) of all numbers present in nums
+        # (this effectively tracks which multiples of k are present)
+        present = set(nums)
+        
+        # Step 2 & 3: Check multiples of k starting from smallest (k*1, k*2, ...)
+        # and return the first one whose value is not in the hash table (missing)
+        for i in count(1):
+            multiple = k * i
+            if multiple not in present:
+                return multiple
+
+
+if __name__ == "__main__":
+    sol = Solution()
+    
+    # Example 1
+    nums1 = [8, 2, 3, 4, 6]
+    k1 = 2
+    print(f"Example 1: nums = {nums1}, k = {k1}")
+    print(f"Output: {sol.missingMultiple(nums1, k1)}")  # Expected: 10
+    
+    # Example 2
+    nums2 = [1, 4, 7, 10, 15]
+    k2 = 5
+    print(f"\nExample 2: nums = {nums2}, k = {k2}")
+    print(f"Output: {sol.missingMultiple(nums2, k2)}")  # Expected: 5
+    
+    # Extra test
+    nums3 = [2, 4, 6, 8, 10]
+    k3 = 2
+    print(f"\nExtra: nums = {nums3}, k = {k3}")
+    print(f"Output: {sol.missingMultiple(nums3, k3)}")  # Expected: 12
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Time & Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n + m)</span></div>
+                <div class="comp-box">Space: <span>O(n)</span></div>
+            </div>
+            <p style="margin-top: 12px; color: #4a5568;">jahan n = nums.length, m = missing multiple ka position (≤ n+1)</p>
+        </section>
+
+        <section>
+            <h2>Examples / Dry Run</h2>
+            <div class="example">
+                <strong>Example 1:</strong> nums = [8,2,3,4,6], k = 2<br>
+                present set = {8,2,3,4,6}<br>
+                Check: 2 → present, 4 → present, 6 → present, 8 → present, 10 → missing → return 10
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong> nums = [1,4,7,10,15], k = 5<br>
+                present set = {1,4,7,10,15}<br>
+                Check: 5 → missing → return 5
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill
+        </footer>
+    </div>
+</body>
+</html>
