@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3876. Construct Uniform Parity Array II - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.medium { background: #ed8936; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        .hindi ul { margin: 8px 0 16px 22px; }
+        .hindi li { margin-bottom: 6px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3876. Construct Uniform Parity Array II</h1>
+            <span class="badge medium">Medium</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <p>You are given an array <code>nums1</code> of <code>n</code> <strong>distinct</strong> integers.</p>
+            <p>You want to construct another array <code>nums2</code> of length <code>n</code> such that the elements in <code>nums2</code> are either <strong>all odd or all even</strong>.</p>
+            <p>For each index <code>i</code>, you must choose <strong>exactly one</strong> of the following (in any order):</p>
+            <ul>
+                <li><code>nums2[i] = nums1[i]</code></li>
+                <li><code>nums2[i] = nums1[i] - nums1[j]</code>, for an index <code>j != i</code>, such that <code>nums1[i] - nums1[j] &gt;= 1</code></li>
+            </ul>
+            <p>Return <code>true</code> if it is possible to construct such an array, otherwise return <code>false</code>.</p>
+            <p><strong>Constraints:</strong></p>
+            <ul>
+                <li><code>1 &lt;= n == nums1.length &lt;= 10^5</code></li>
+                <li><code>1 &lt;= nums1[i] &lt;= 10^9</code></li>
+                <li><code>nums1</code> consists of distinct integers.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong></p>
+                <p>Humein <code>nums1</code> se naya array <code>nums2</code> banana hai. Har position par ya to wahi number rakh sakte ho, ya us number me se koi chhota dusra number minus kar sakte ho. Last mein <code>nums2</code> ke saare numbers ya to odd hone chahiye, ya saare even.</p>
+
+                <p><strong>Approach kya hai?</strong></p>
+                <p>Sabse chhota number bahut important hai. Usse chhota koi number nahi hai, isliye usko minus karke change nahi kiya ja sakta. Woh apni original parity (odd/even) par hi rahega.</p>
+                <ul>
+                    <li>Agar array ka minimum number <strong>odd</strong> hai, to hum poori array ko odd bana sakte hain. Odd numbers ko waise hi rakh do. Even numbers is minimum odd se bade honge, unko is odd se minus karne par odd mil jaayega (even − odd = odd).</li>
+                    <li>Agar array ka minimum number <strong>even</strong> hai, to koi bhi odd number even nahi ban sakta. Odd ko even banane ke liye usse chhota odd chahiye, jo exist nahi karta. Isliye ye case tabhi true hai jab array mein koi odd ho hi na — matlab saare even hon.</li>
+                </ul>
+                <p>Isliye simple rule:</p>
+                <ul>
+                    <li>minimum odd hai → <code>true</code></li>
+                    <li>minimum even hai → tabhi <code>true</code> jab saare numbers even hon</li>
+                </ul>
+
+                <p><strong>Code kaise kaam karta hai?</strong></p>
+                <p>Pehle array ka minimum nikalte hain. Agar woh odd hai to seedha <code>true</code> return. Warna check karte hain ki kya har element even hai.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>from typing import List
+
+
+class Solution:
+    def uniformArray(self, nums1: List[int]) -&gt; bool:
+        # Time: O(n)  |  Space: O(1)
+        mn = min(nums1)
+        if mn % 2 == 1:
+            return True
+        return all(x % 2 == 0 for x in nums1)</code></pre>
+        </section>
+
+        <section>
+            <h2>Time &amp; Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n)</span></div>
+                <div class="comp-box">Space: <span>O(1)</span></div>
+            </div>
+            <p style="margin-top: 12px;">Sirf ek baar array scan karni padti hai. Extra memory almost kuch nahi.</p>
+        </section>
+
+        <section>
+            <h2>Examples / Dry Run</h2>
+            <div class="example">
+                <strong>Example 1:</strong> <code>nums1 = [1, 4, 7]</code><br>
+                Minimum = 1 (odd) → saari array odd ban sakti hai: <code>[1, 4-1, 7] = [1, 3, 7]</code><br>
+                Output: <code>true</code>
+            </div>
+            <div class="example">
+                <strong>Example 2:</strong> <code>nums1 = [2, 3]</code><br>
+                Minimum = 2 (even), aur 3 odd hai. 3 ko even nahi bana sakte, 2 ko odd nahi bana sakte.<br>
+                Output: <code>false</code>
+            </div>
+            <div class="example">
+                <strong>Example 3:</strong> <code>nums1 = [4, 6]</code><br>
+                Minimum = 4 (even), lekin koi odd nahi. Seedha rakh do: <code>[4, 6]</code> saare even.<br>
+                Output: <code>true</code>
+            </div>
+            <div class="example">
+                <strong>Extra:</strong> <code>nums1 = [2, 4, 5]</code><br>
+                Minimum = 2 (even) aur 5 odd hai → false. 2 hamesha even rahega, 5 hamesha odd.
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill · LeetCode 3876
+        </footer>
+    </div>
+</body>
+</html>
