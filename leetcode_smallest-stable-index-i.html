@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3903. Smallest Stable Index I - LeetCode Solution</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: 28px 32px;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        .badge.easy { background: #48bb78; }
+        section {
+            padding: 28px 32px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        section:last-child { border-bottom: none; }
+        h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .hindi {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        .hindi p { margin-bottom: 12px; }
+        .hindi ul { margin: 8px 0 16px 22px; }
+        .hindi li { margin-bottom: 6px; }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        code { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+        .complexity {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .comp-box {
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .comp-box span { color: #2b6cb0; }
+        .example {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .example strong { display: block; margin-bottom: 6px; }
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3903. Smallest Stable Index I</h1>
+            <span class="badge easy">Easy</span>
+        </header>
+
+        <section>
+            <h2>Problem Statement</h2>
+            <div>
+                <p>You are given an integer array <code>nums</code> of length <code>n</code> and an integer <code>k</code>.</p>
+                <p>For each index <code>i</code>, define its <strong>instability score</strong> as <code>max(nums[0..i]) - min(nums[i..n - 1])</code>.</p>
+                <ul>
+                    <li><code>max(nums[0..i])</code> is the largest value among the elements from index 0 to index <code>i</code>.</li>
+                    <li><code>min(nums[i..n - 1])</code> is the smallest value among the elements from index <code>i</code> to index <code>n - 1</code>.</li>
+                </ul>
+                <p>An index <code>i</code> is called <strong>stable</strong> if its instability score is less than or equal to <code>k</code>.</p>
+                <p>Return the <strong>smallest</strong> stable index. If no such index exists, return <code>-1</code>.</p>
+                <p><strong>Constraints:</strong></p>
+                <ul>
+                    <li><code>1 &lt;= nums.length &lt;= 100</code></li>
+                    <li><code>0 &lt;= nums[i] &lt;= 10^9</code></li>
+                    <li><code>0 &lt;= k &lt;= 10^9</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Solution Approach (Hindi)</h2>
+            <div class="hindi">
+                <p><strong>Problem kya hai?</strong></p>
+                <p>Har index <code>i</code> ke liye instability score nikalna hai: left side (0 se i tak) ka maximum minus right side (i se end tak) ka minimum. Jo pehla index is score ko <code>k</code> se chhota ya barabar rakhe, wahi answer hai. Agar koi nahi mila to <code>-1</code>.</p>
+
+                <p><strong>Approach kya hai?</strong></p>
+                <p>Seedha har index pe left max aur right min nikalna bhi chalega kyunki n sirf 100 hai. Better tarika yeh hai:</p>
+                <ul>
+                    <li>Pehle ek array banao <code>suffix_min</code>, jisme <code>suffix_min[i]</code> = i se last tak ka sabse chhota number.</li>
+                    <li>Phir left se right chalo aur running <code>prefix_max</code> rakho (0 se i tak ka sabse bada).</li>
+                    <li>Har i pe check karo: <code>prefix_max - suffix_min[i] &lt;= k</code>? Haan to i return kar do.</li>
+                </ul>
+                <p>Kyunki hum left se start karte hain, pehla match hi smallest stable index hoga.</p>
+
+                <p><strong>Code kaise kaam karta hai?</strong></p>
+                <p>Pehle last se start karke suffix minimum banate hain. Phir aage se chalte hue maximum update karte hain. Example: <code>nums = [5,0,1,4], k = 3</code></p>
+                <ul>
+                    <li>suffix_min = [0, 0, 1, 4]</li>
+                    <li>i=0: max=5, 5-0=5 &gt; 3</li>
+                    <li>i=1: max=5, 5-0=5 &gt; 3</li>
+                    <li>i=2: max=5, 5-1=4 &gt; 3</li>
+                    <li>i=3: max=5, 5-4=1 &lt;= 3 → return 3</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Python Code</h2>
+            <pre><code>from typing import List
+
+
+class Solution:
+    def firstStableIndex(self, nums: List[int], k: int) -&gt; int:
+        # Time: O(n), Space: O(n)
+        n = len(nums)
+        suffix_min = [0] * n
+        suffix_min[n - 1] = nums[n - 1]
+        for i in range(n - 2, -1, -1):
+            suffix_min[i] = min(suffix_min[i + 1], nums[i])
+
+        prefix_max = nums[0]
+        for i in range(n):
+            prefix_max = max(prefix_max, nums[i])
+            if prefix_max - suffix_min[i] &lt;= k:
+                return i
+        return -1</code></pre>
+        </section>
+
+        <section>
+            <h2>Time &amp; Space Complexity</h2>
+            <div class="complexity">
+                <div class="comp-box">Time: <span>O(n)</span></div>
+                <div class="comp-box">Space: <span>O(n)</span></div>
+            </div>
+            <p style="margin-top:12px;">n chhota hai (100), isliye O(n^2) brute force bhi accept ho jata. Prefix/suffix se O(n) milta hai.</p>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <div class="example">
+                <strong>Example 1</strong>
+                Input: nums = [5,0,1,4], k = 3<br>
+                Output: 3<br>
+                Scores: 5, 5, 4, 1 → pehla &lt;= 3 index 3 par hai.
+            </div>
+            <div class="example">
+                <strong>Example 2</strong>
+                Input: nums = [3,2,1], k = 1<br>
+                Output: -1<br>
+                Har index par score 2 hai, k=1 se bada.
+            </div>
+            <div class="example">
+                <strong>Example 3</strong>
+                Input: nums = [0], k = 0<br>
+                Output: 0<br>
+                Sirf ek element, score 0.
+            </div>
+        </section>
+
+        <footer>
+            Generated by leetcode-hindi-solver skill · https://github.com/devesh096/problem_solving
+        </footer>
+    </div>
+</body>
+</html>
